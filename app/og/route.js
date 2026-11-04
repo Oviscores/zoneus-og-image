@@ -10,8 +10,9 @@ export async function GET(req) {
   const time = searchParams.get('time') || ''
 
   const sport = lg === 'NFL' ? 'nfl' : lg === 'NBA' ? 'nba' : lg === 'MLB' ? 'mlb' : 'nhl'
-  const homeLogo = `https://a.espncdn.com/i/teamlogos/${sport}/500/${home.toLowerCase()}.png`
-  const awayLogo = `https://a.espncdn.com/i/teamlogos/${sport}/500/${away.toLowerCase()}.png`
+  const proxy = 'https://zoneus-proxy.vivienfrappier.workers.dev'
+  const homeLogo = `${proxy}?logo=${home}&lg=${lg}`
+  const awayLogo = `${proxy}?logo=${away}&lg=${lg}`
   const leagueLogo = `https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`
   const zoneUsLogo = 'https://raw.githubusercontent.com/Oviscores/lukas23/main/logo%20zone%20us.png'
 
