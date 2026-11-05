@@ -21,10 +21,20 @@ export async function GET(req) {
     ? 'linear-gradient(135deg, #0a0a1a 0%, #1a1060 40%, #2d1b8e 100%)'   // bleu/violet NBA
     : 'linear-gradient(135deg, #001a2e 0%, #003d6b 40%, #005fa3 100%)'   // bleu glace NHL
 
-  // URLs directes — next/og charge les images lui-même (pas de fetch base64)
-  const homeLogo = `https://a.espncdn.com/i/teamlogos/${sport}/500/${home.toLowerCase()}.png`
-  const awayLogo = `https://a.espncdn.com/i/teamlogos/${sport}/500/${away.toLowerCase()}.png`
-  const leagueLogo = `https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`
+  // Logos via proxy Cloudflare Workers (zoneus.fr/logo) — ESPN bloque Vercel Edge
+  // CF peut fetch ESPN, met en cache 24h, et re-sert instantanément
+  const toBase64 = async (url) => {
+    const res = await fetch(url)
+    const buf = await res.arrayBuffer()
+    const mime = res.headers.get('content-type') || 'image/png'
+    return `data:${mime};base64,${Buffer.from(buf).toString('base64')}`
+  }
+
+  const [homeLogo, awayLogo, leagueLogo] = await Promise.all([
+    toBase64(`https://zoneus.fr/logo?sport=${sport}&team=${home.toLowerCase()}`),
+    toBase64(`https://zoneus.fr/logo?sport=${sport}&team=${away.toLowerCase()}`),
+    toBase64(`https://zoneus.fr/logo?sport=${sport}&team=league`),
+  ])
 
   return new ImageResponse(
     (
