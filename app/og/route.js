@@ -27,14 +27,7 @@ export async function GET(req) {
     toBase64(`https://zoneus.fr/logo?sport=${sport}&team=league`),
   ])
 
-  // Fond : photo pour Facebook (lent ok), gradient pour WhatsApp/fast (rapide)
-  const bgImageUrl = lg === 'NFL'
-    ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
-    : lg === 'MLB'
-    ? 'https://zoneus-og-image-nine.vercel.app/d517eae8-image.jpg'
-    : lg === 'NBA'
-    ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
-    : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
+  // Gradient fallback (WhatsApp/fast) — toujours rapide
   const bgGradient = lg === 'NFL'
     ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)'
     : lg === 'MLB'
@@ -43,7 +36,8 @@ export async function GET(req) {
     ? 'linear-gradient(135deg, #0a0a1a 0%, #1a1060 40%, #2d1b8e 100%)'
     : 'linear-gradient(135deg, #001a2e 0%, #003d6b 40%, #005fa3 100%)'
 
-  const bgImage = fast ? null : await toBase64(bgImageUrl)
+  // Fond photo via proxy CF (zoneus.fr/bg) — Vercel ne peut pas fetch son propre domaine
+  const bgImage = fast ? null : await toBase64(`https://zoneus.fr/bg?lg=${lg}`)
 
   return new ImageResponse(
     (
