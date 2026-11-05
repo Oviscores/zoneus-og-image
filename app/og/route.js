@@ -9,20 +9,10 @@ export async function GET(req) {
   const lg = (searchParams.get('lg') || 'NHL').toUpperCase()
   const time = searchParams.get('time') || ''
 
+  const fast = searchParams.get('fast') === '1'
   const sport = lg === 'NFL' ? 'nfl' : lg === 'NBA' ? 'nba' : lg === 'MLB' ? 'mlb' : 'nhl'
   const zoneUsLogo = 'https://raw.githubusercontent.com/Oviscores/lukas23/main/logo%20zone%20us.png'
 
-  // Gradient CSS par ligue — pas de fetch image, instantané
-  const bgGradient = lg === 'NFL'
-    ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)'   // bleu nuit NFL
-    : lg === 'MLB'
-    ? 'linear-gradient(135deg, #1a0a0a 0%, #3d1515 40%, #6b0f0f 100%)'   // rouge sombre MLB
-    : lg === 'NBA'
-    ? 'linear-gradient(135deg, #0a0a1a 0%, #1a1060 40%, #2d1b8e 100%)'   // bleu/violet NBA
-    : 'linear-gradient(135deg, #001a2e 0%, #003d6b 40%, #005fa3 100%)'   // bleu glace NHL
-
-  // Logos via proxy Cloudflare Workers (zoneus.fr/logo) — ESPN bloque Vercel Edge
-  // CF peut fetch ESPN, met en cache 24h, et re-sert instantanément
   const toBase64 = async (url) => {
     const res = await fetch(url)
     const buf = await res.arrayBuffer()
@@ -30,11 +20,30 @@ export async function GET(req) {
     return `data:${mime};base64,${Buffer.from(buf).toString('base64')}`
   }
 
+  // Logos via proxy CF (zoneus.fr/logo) — ESPN bloque Vercel Edge directement
   const [homeLogo, awayLogo, leagueLogo] = await Promise.all([
     toBase64(`https://zoneus.fr/logo?sport=${sport}&team=${home.toLowerCase()}`),
     toBase64(`https://zoneus.fr/logo?sport=${sport}&team=${away.toLowerCase()}`),
     toBase64(`https://zoneus.fr/logo?sport=${sport}&team=league`),
   ])
+
+  // Fond : photo pour Facebook (lent ok), gradient pour WhatsApp/fast (rapide)
+  const bgImageUrl = lg === 'NFL'
+    ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
+    : lg === 'MLB'
+    ? 'https://zoneus-og-image-nine.vercel.app/d517eae8-image.jpg'
+    : lg === 'NBA'
+    ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
+    : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
+  const bgGradient = lg === 'NFL'
+    ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)'
+    : lg === 'MLB'
+    ? 'linear-gradient(135deg, #1a0a0a 0%, #3d1515 40%, #6b0f0f 100%)'
+    : lg === 'NBA'
+    ? 'linear-gradient(135deg, #0a0a1a 0%, #1a1060 40%, #2d1b8e 100%)'
+    : 'linear-gradient(135deg, #001a2e 0%, #003d6b 40%, #005fa3 100%)'
+
+  const bgImage = fast ? null : await toBase64(bgImageUrl)
 
   return new ImageResponse(
     (
@@ -51,6 +60,8 @@ export async function GET(req) {
           background: bgGradient,
         }}
       >
+        {bgImage && <img src={bgImage} width="1200" height="630"
+          style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px', objectFit: 'cover' }} />}
         <img src={zoneUsLogo} width="300" height="84"
           style={{ position: 'absolute', top: '14px', objectFit: 'contain' }} />
         <img src={leagueLogo} width="90" height="90"
