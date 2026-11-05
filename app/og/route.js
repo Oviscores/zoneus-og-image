@@ -36,8 +36,16 @@ export async function GET(req) {
     ? 'linear-gradient(135deg, #0a0a1a 0%, #1a1060 40%, #2d1b8e 100%)'
     : 'linear-gradient(135deg, #001a2e 0%, #003d6b 40%, #005fa3 100%)'
 
-  // Fond photo via proxy CF (zoneus.fr/bg) — Vercel ne peut pas fetch son propre domaine
-  const bgImage = fast ? null : await toBase64(`https://zoneus.fr/bg?lg=${lg}`)
+  // Fond photo — fetch direct depuis public/ du même domaine Vercel
+  const bgImageUrl = lg === 'NFL'
+    ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
+    : lg === 'MLB'
+    ? 'https://zoneus-og-image-nine.vercel.app/d517eae8-image.jpg'
+    : lg === 'NBA'
+    ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
+    : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
+
+  const bgImage = fast ? null : await toBase64(bgImageUrl)
 
   return new ImageResponse(
     (
