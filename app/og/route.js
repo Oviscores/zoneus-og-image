@@ -36,14 +36,14 @@ export async function GET(req) {
     ? 'linear-gradient(135deg, #0a0a1a 0%, #1a1060 40%, #2d1b8e 100%)'
     : 'linear-gradient(135deg, #001a2e 0%, #003d6b 40%, #005fa3 100%)'
 
-  // Fond photo — fetch direct depuis public/ du même domaine Vercel
+  // Fond photo depuis GitHub raw (accessible partout, pas de blocage)
   const bgImageUrl = lg === 'NFL'
-    ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
+    ? 'https://raw.githubusercontent.com/Oviscores/lukas23/main/32adbd87-image.jpg'
     : lg === 'MLB'
-    ? 'https://zoneus-og-image-nine.vercel.app/d517eae8-image.jpg'
+    ? 'https://raw.githubusercontent.com/Oviscores/lukas23/main/d517eae8-image.jpg'
     : lg === 'NBA'
-    ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
-    : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
+    ? 'https://raw.githubusercontent.com/Oviscores/lukas23/main/6d51a2c9-image.jpg'
+    : 'https://raw.githubusercontent.com/Oviscores/lukas23/main/977b26b0-image.jpg'
 
   const bgImage = fast ? null : await toBase64(bgImageUrl)
 
