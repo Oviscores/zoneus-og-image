@@ -10,10 +10,6 @@ export async function GET(req) {
   const time = searchParams.get('time') || ''
 
   const sport = lg === 'NFL' ? 'nfl' : lg === 'NBA' ? 'nba' : lg === 'MLB' ? 'mlb' : 'nhl'
-  const espnSport = sport
-  const homeLogo = `https://a.espncdn.com/i/teamlogos/${espnSport}/500/${home.toLowerCase()}.png`
-  const awayLogo = `https://a.espncdn.com/i/teamlogos/${espnSport}/500/${away.toLowerCase()}.png`
-  const leagueLogo = `https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`
   const zoneUsLogo = 'https://raw.githubusercontent.com/Oviscores/lukas23/main/logo%20zone%20us.png'
   const bgImageUrl = lg === 'NFL'
     ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
@@ -23,11 +19,19 @@ export async function GET(req) {
     ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
     : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
 
-  const bgRes = await fetch(bgImageUrl)
-  const bgBuf = await bgRes.arrayBuffer()
-  const bgBase64 = Buffer.from(bgBuf).toString('base64')
-  const bgMime = 'image/jpeg'
-  const bgImage = `data:${bgMime};base64,${bgBase64}`
+  const toBase64 = async (url) => {
+    const res = await fetch(url)
+    const buf = await res.arrayBuffer()
+    const mime = res.headers.get('content-type') || 'image/png'
+    return `data:${mime};base64,${Buffer.from(buf).toString('base64')}`
+  }
+
+  const [bgImage, homeLogo, awayLogo, leagueLogo] = await Promise.all([
+    toBase64(bgImageUrl),
+    toBase64(`https://a.espncdn.com/i/teamlogos/${sport}/500/${home.toLowerCase()}.png`),
+    toBase64(`https://a.espncdn.com/i/teamlogos/${sport}/500/${away.toLowerCase()}.png`),
+    toBase64(`https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`),
+  ])
 
   return new ImageResponse(
     (
