@@ -15,13 +15,19 @@ export async function GET(req) {
   const awayLogo = `https://a.espncdn.com/i/teamlogos/${espnSport}/500/${away.toLowerCase()}.png`
   const leagueLogo = `https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`
   const zoneUsLogo = 'https://raw.githubusercontent.com/Oviscores/lukas23/main/logo%20zone%20us.png'
-  const bgImage = lg === 'NFL'
+  const bgImageUrl = lg === 'NFL'
     ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
     : lg === 'MLB'
     ? 'https://zoneus-og-image-nine.vercel.app/d517eae8-image.jpg'
     : lg === 'NBA'
     ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
     : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
+
+  const bgRes = await fetch(bgImageUrl)
+  const bgBuf = await bgRes.arrayBuffer()
+  const bgBase64 = Buffer.from(bgBuf).toString('base64')
+  const bgMime = 'image/jpeg'
+  const bgImage = `data:${bgMime};base64,${bgBase64}`
 
   return new ImageResponse(
     (
