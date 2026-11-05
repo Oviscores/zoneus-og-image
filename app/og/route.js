@@ -20,11 +20,11 @@ export async function GET(req) {
     return `data:${mime};base64,${Buffer.from(buf).toString('base64')}`
   }
 
-  // Logos via proxy CF (zoneus.fr/logo) — ESPN bloque Vercel Edge directement
+  // Logos ESPN en base64 — fetch direct depuis ESPN (accessible depuis Vercel Edge)
   const [homeLogo, awayLogo, leagueLogo] = await Promise.all([
-    toBase64(`https://zoneus.fr/logo?sport=${sport}&team=${home.toLowerCase()}`),
-    toBase64(`https://zoneus.fr/logo?sport=${sport}&team=${away.toLowerCase()}`),
-    toBase64(`https://zoneus.fr/logo?sport=${sport}&team=league`),
+    toBase64(`https://a.espncdn.com/i/teamlogos/${sport}/500/${home.toLowerCase()}.png`),
+    toBase64(`https://a.espncdn.com/i/teamlogos/${sport}/500/${away.toLowerCase()}.png`),
+    toBase64(`https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`),
   ])
 
   // Gradient fallback (WhatsApp/fast) — toujours rapide
