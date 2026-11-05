@@ -11,13 +11,15 @@ export async function GET(req) {
 
   const sport = lg === 'NFL' ? 'nfl' : lg === 'NBA' ? 'nba' : lg === 'MLB' ? 'mlb' : 'nhl'
   const zoneUsLogo = 'https://raw.githubusercontent.com/Oviscores/lukas23/main/logo%20zone%20us.png'
-  const bgImageUrl = lg === 'NFL'
-    ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
+
+  // Gradient CSS par ligue — pas de fetch image, instantané
+  const bgGradient = lg === 'NFL'
+    ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)'   // bleu nuit NFL
     : lg === 'MLB'
-    ? 'https://zoneus-og-image-nine.vercel.app/d517eae8-image.jpg'
+    ? 'linear-gradient(135deg, #1a0a0a 0%, #3d1515 40%, #6b0f0f 100%)'   // rouge sombre MLB
     : lg === 'NBA'
-    ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
-    : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
+    ? 'linear-gradient(135deg, #0a0a1a 0%, #1a1060 40%, #2d1b8e 100%)'   // bleu/violet NBA
+    : 'linear-gradient(135deg, #001a2e 0%, #003d6b 40%, #005fa3 100%)'   // bleu glace NHL
 
   const toBase64 = async (url) => {
     const res = await fetch(url)
@@ -26,8 +28,8 @@ export async function GET(req) {
     return `data:${mime};base64,${Buffer.from(buf).toString('base64')}`
   }
 
-  const [bgImage, homeLogo, awayLogo, leagueLogo] = await Promise.all([
-    toBase64(bgImageUrl),
+  // 3 fetches parallèles (logos) au lieu de 4 — le fond est maintenant CSS
+  const [homeLogo, awayLogo, leagueLogo] = await Promise.all([
     toBase64(`https://a.espncdn.com/i/teamlogos/${sport}/500/${home.toLowerCase()}.png`),
     toBase64(`https://a.espncdn.com/i/teamlogos/${sport}/500/${away.toLowerCase()}.png`),
     toBase64(`https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`),
@@ -45,10 +47,9 @@ export async function GET(req) {
           justifyContent: 'center',
           position: 'relative',
           overflow: 'hidden',
+          background: bgGradient,
         }}
       >
-        <img src={bgImage} width="1200" height="630"
-          style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px', objectFit: 'cover' }} />
         <img src={zoneUsLogo} width="300" height="84"
           style={{ position: 'absolute', top: '14px', objectFit: 'contain' }} />
         <img src={leagueLogo} width="90" height="90"
