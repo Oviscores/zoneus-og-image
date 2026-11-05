@@ -16,12 +16,12 @@ export async function GET(req) {
   const leagueLogo = `https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`
   const zoneUsLogo = 'https://raw.githubusercontent.com/Oviscores/lukas23/main/logo%20zone%20us.png'
   const bgImage = lg === 'NFL'
-    ? 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/32adbd87-image.jpg'
+    ? 'https://zoneus-og-image-nine.vercel.app/32adbd87-image.jpg'
     : lg === 'MLB'
-    ? 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/d517eae8-image.jpg'
+    ? 'https://zoneus-og-image-nine.vercel.app/d517eae8-image.jpg'
     : lg === 'NBA'
-    ? 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/6d51a2c9-image.jpg'
-    : 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/977b26b0-image.jpg'
+    ? 'https://zoneus-og-image-nine.vercel.app/6d51a2c9-image.jpg'
+    : 'https://zoneus-og-image-nine.vercel.app/977b26b0-image.jpg'
 
   return new ImageResponse(
     (
