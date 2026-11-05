@@ -45,10 +45,10 @@ export async function GET(req) {
       >
         <img src={bgImage} width="1200" height="630"
           style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px', objectFit: 'cover' }} />
-        <img src={zoneUsLogo} width="250" height="70"
-          style={{ position: 'absolute', top: '10px', objectFit: 'contain' }} />
-        <img src={leagueLogo} width="60" height="60"
-          style={{ position: 'absolute', top: '88px', objectFit: 'contain' }} />
+        <img src={zoneUsLogo} width="300" height="84"
+          style={{ position: 'absolute', top: '14px', objectFit: 'contain' }} />
+        <img src={leagueLogo} width="90" height="90"
+          style={{ position: 'absolute', top: '108px', objectFit: 'contain' }} />
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '40px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '400px' }}>
@@ -57,7 +57,7 @@ export async function GET(req) {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '200px' }}>
-            <span style={{ color: 'white', fontSize: time ? '56px' : '96px', fontWeight: 900, opacity: 0.9 }}>
+            <span style={{ color: 'white', fontSize: time ? '64px' : '96px', fontWeight: 900, textShadow: '0 2px 12px rgba(0,0,0,0.9)', letterSpacing: time ? '2px' : '0' }}>
               {time || '@'}
             </span>
           </div>
