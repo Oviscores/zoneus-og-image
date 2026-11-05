@@ -33,12 +33,12 @@ export async function GET(req) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundImage: `url(${bgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
+        <img src={bgImage} width="1200" height="630"
+          style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px', objectFit: 'cover' }} />
         <img src={zoneUsLogo} width="250" height="70"
           style={{ position: 'absolute', top: '10px', objectFit: 'contain' }} />
         <img src={leagueLogo} width="60" height="60"
