@@ -15,6 +15,13 @@ export async function GET(req) {
   const awayLogo = `https://a.espncdn.com/i/teamlogos/${espnSport}/500/${away.toLowerCase()}.png`
   const leagueLogo = `https://a.espncdn.com/i/teamlogos/leagues/500/${sport}.png`
   const zoneUsLogo = 'https://raw.githubusercontent.com/Oviscores/lukas23/main/logo%20zone%20us.png'
+  const bgImage = lg === 'NFL'
+    ? 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/32adbd87-image.jpg'
+    : lg === 'MLB'
+    ? 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/d517eae8-image.jpg'
+    : lg === 'NBA'
+    ? 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/6d51a2c9-image.jpg'
+    : 'https://raw.githubusercontent.com/Oviscores/zoneus-og-image/main/public/977b26b0-image.jpg'
 
   return new ImageResponse(
     (
@@ -26,7 +33,9 @@ export async function GET(req) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)',
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           position: 'relative',
         }}
       >
